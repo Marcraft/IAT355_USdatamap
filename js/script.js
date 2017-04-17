@@ -3,67 +3,78 @@
       var map = new Datamap({
         scope: 'usa',
         element: document.getElementById('container1'),
+        
         projection: 'mercator',
         height: 500,
         fills: {
-          defaultFill: 'green',
+          defaultFill: '#006d2c',
           low: '#fee8c8',
           midLow: '#fdcc8a',
           midHi: '#fc8d59',
           hi: '#d7301f'
         },
+
+        //OnClick event on the states
+        done: function(datamap) {
+            datamap.svg.selectAll('.datamaps-subunit').on('click', function(geography) {
+                alert(geography.properties.name);
+                // var m = {};
+                // m[geography.id] = '#000000';
+                // datamap.updateChoropleth(m);
+            });
+        },
         
         data: {
-          WA: {fillKey: 'midLow', numberOfThings: 19 },
-          OR: {fillKey: 'midLow', numberOfThings: 17 },
-          CA: {fillKey: 'hi', numberOfThings: 205 },
-          MT: {fillKey: 'low', numberOfThings: 4 },
-          ID: {fillKey: 'midHi', numberOfThings: 8 },
-          WY: {fillKey: 'midHi', numberOfThings: 6 },
-          NV: {fillKey: 'midLow', numberOfThings: 19 },
-          UT: {fillKey: 'midLow', numberOfThings: 10 },
-          AZ: {fillKey: 'midHi', numberOfThings: 40 },
-          ND: {fillKey: 'low', numberOfThings: 0 },
-          SD: {fillKey: 'low', numberOfThings: 1 },
-          NE: {fillKey: 'midLow', numberOfThings: 9 },
-          CO: {fillKey: 'midHi', numberOfThings: 30 },
-          KS: {fillKey: 'midLow', numberOfThings: 11 },
-          NM: {fillKey: 'midLow', numberOfThings: 21 },
-          OK: {fillKey: 'midHi', numberOfThings: 37 },
-          TX: {fillKey: 'hi', numberOfThings: 109 },
-          MN: {fillKey: 'midLow', numberOfThings: 12 },
-          IA: {fillKey: 'low', numberOfThings: 5 },
-          MO: {fillKey: 'midHi', numberOfThings: 21 },
-          AR: {fillKey: 'low', numberOfThings: 5 },
-          LA: {fillKey: 'midHi', numberOfThings: 25 },
-          WI: {fillKey: 'midLow', numberOfThings: 12 },
-          IL: {fillKey: 'midLow', numberOfThings: 22 },
-          MS: {fillKey: 'midLow', numberOfThings: 12 },
-          MI: {fillKey: 'midLow', numberOfThings: 20 },
-          IN: {fillKey: 'midHi', numberOfThings: 21 },
-          OH: {fillKey: 'midHi', numberOfThings: 36 },
-          KY: {fillKey: 'midLow', numberOfThings: 18 },
-          TN: {fillKey: 'midLow', numberOfThings: 20 },
-          AL: {fillKey: 'low', numberOfThings: 2 },
-          FL: {fillKey: 'hi', numberOfThings: 71 },
-          ME: {fillKey: 'low', numberOfThings: 2 },
-          VT: {fillKey: 'low', numberOfThings: 1 },
-          NH: {fillKey: 'low', numberOfThings: 3 },
-          NY: {fillKey: 'midHi', numberOfThings: 27 },
-          MA: {fillKey: 'midLow', numberOfThings: 10 },
-          CT: {fillKey: 'low', numberOfThings: 4 },
-          RI: {fillKey: 'low', numberOfThings: 1 },
-          PA: {fillKey: 'midHi', numberOfThings: 22 },
-          NJ: {fillKey: 'midHi', numberOfThings: 23 },
-          WV: {fillKey: 'midLow', numberOfThings: 10 },
-          MD: {fillKey: 'midLow', numberOfThings: 17 },
-          DE: {fillKey: 'low', numberOfThings: 4 },
-          VA: {fillKey: 'midHi', numberOfThings: 22 },
-          NC: {fillKey: 'midHi', numberOfThings: 26 },
-          SC: {fillKey: 'midHi', numberOfThings: 21 },
-          GA: {fillKey: 'midHi', numberOfThings: 38 },
-          AK: {fillKey: 'midLow', numberOfThings: 19 },
-          HI: {fillKey: 'low', numberOfThings: 5 }
+          WA: {fillKey: 'low', death: 19, total: 2.3 },
+          OR: {fillKey: 'midLow', death: 17, total: 3.8 },
+          CA: {fillKey: 'midLow', death: 205, total: 4.9 },
+          MT: {fillKey: 'midLow', death: 4, total: 3.9 },
+          ID: {fillKey: 'midLow', death: 8, total: 4.3 },
+          WY: {fillKey: 'hi', death: 6, total: 10.3 },
+          NV: {fillKey: 'midHi', death: 19, total: 6.7 },
+          UT: {fillKey: 'midLow', death: 10, total: 3.4 },
+          AZ: {fillKey: 'midHi', death: 40, total: 6.2 },
+          ND: {fillKey: 'low', death: 0, total: 1.4 },
+          SD: {fillKey: 'midLow', death: 1, total: 3.5 },
+          NE: {fillKey: 'midLow', death: 9, total: 4.3 },
+          CO: {fillKey: 'midHi', death: 30, total: 5.4 },
+          KS: {fillKey: 'midLow', death: 11, total: 3.1 },
+          NM: {fillKey: 'hi', death: 21, total: 9.6 },
+          OK: {fillKey: 'hi', death: 37, total: 8.3 },
+          TX: {fillKey: 'midLow', death: 109, total: 3.6 },
+          MN: {fillKey: 'low', death: 12, total: 2.2 },
+          IA: {fillKey: 'low', death: 5, total: 1.6 },
+          MO: {fillKey: 'midLow', death: 21, total: 3.5 },
+          AR: {fillKey: 'low', death: 5, total: 1.7 },
+          LA: {fillKey: 'midHi', death: 25, total: 5.8 },
+          WI: {fillKey: 'low', death: 12, total: 1.9 },
+          IL: {fillKey: 'low', death: 22, total: 1.6 },
+          MS: {fillKey: 'low', death: 12, total: 2.7 },
+          MI: {fillKey: 'low', death: 20, total: 1.6 },
+          IN: {fillKey: 'low', death: 21, total: 2.9 },
+          OH: {fillKey: 'low', death: 36, total: 2.5 },
+          KY: {fillKey: 'midLow', death: 18, total: 3.6 },
+          TN: {fillKey: 'midLow', death: 20, total: 3.1 },
+          AL: {fillKey: 'midLow', death: 2, total: 3.5 },
+          FL: {fillKey: 'low', death: 71, total: 3.0 },
+          ME: {fillKey: 'low', death: 2, total: 1.5 },
+          VT: {fillKey: 'low', death: 1, total: 1.6 },
+          NH: {fillKey: 'low', death: 3, total: 2.3 },
+          NY: {fillKey: 'low', death: 27, total: 1.0 },
+          MA: {fillKey: 'low', death: 10, total: 1.3 },
+          CT: {fillKey: 'low', death: 4, total: 0.6 },
+          RI: {fillKey: 'low', death: 1, total: 0.1 },
+          PA: {fillKey: 'low', death: 22, total: 1.4 },
+          NJ: {fillKey: 'low', death: 23, total: 1.7 },
+          WV: {fillKey: 'midHi', death: 10, total: 5.4 },
+          MD: {fillKey: 'low', death: 17, total: 2.5 },
+          DE: {fillKey: 'midLow', death: 4, total: 3.2 },
+          VA: {fillKey: 'low', death: 22, total: 2.2 },
+          NC: {fillKey: 'low', death: 26, total: 2.3 },
+          SC: {fillKey: 'midLow', death: 21, total: 3.9 },
+          GA: {fillKey: 'low', death: 38, total: 2.9 },
+          AK: {fillKey: 'midLow', death: 19, total: 5.4 },
+          HI: {fillKey: 'low', death: 5, total: 1.4 }
         },
 
         geographyConfig: {
@@ -73,17 +84,17 @@
             popupTemplate: function(geo, data) {
                 return ['<div class="hoverinfo">',
                     '<strong>', geo.properties.name, '</strong>',
-                    '<br>Total Police killing: <strong>', data.numberOfThings, '</strong>',
+                    '<br>Total Police killing: <strong>', data.death, '</strong>', '<br><strong>', data.total, ' </strong>per million people', 
                     '</div>'].join('');
             }
         }
 
-      })
+      });
       
-      
-      //sample of the arc plugin
+      //legend and labels plugin
       map.legend();
       map.labels();
+
 
 
 var margin = {top: 20, right: 20, bottom: 70, left: 40},
