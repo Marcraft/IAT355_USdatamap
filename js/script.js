@@ -1,5 +1,3 @@
-     
-
       var map = new Datamap({
         scope: 'usa',
         element: document.getElementById('container1'),
@@ -16,12 +14,7 @@
 
         //OnClick event on the states
         done: function(datamap) {
-            datamap.svg.selectAll('.datamaps-subunit').on('click', function(geography) {
-                alert(geography.properties.name);
-                // var m = {};
-                // m[geography.id] = '#000000';
-                // datamap.updateChoropleth(m);
-            });
+            datamap.svg.selectAll('.datamaps-subunit').on('click', mapClick);
         },
         
         data: {
@@ -96,66 +89,124 @@
       map.labels();
 
 
+//Event handler: state is clicked on
+function mapClick(geography) {
+    d3.selectAll('.dot')
+        .style('opacity', 0);
+    d3.selectAll('.dot')
+        .filter(function(d) {return geography.id == d.state;})
+        .style('opacity', 0.35);
+    // alert(geography.properties.name);
+    // alert(geography.id);
 
+}
+
+
+
+//MARGINS of graph
 var margin = {top: 20, right: 20, bottom: 70, left: 40},
     width = 800 - margin.left - margin.right,
     height = 500 - margin.top - margin.bottom;
 
-// Parse the date / time
-var parseDate = d3.time.format("%Y-%m").parse;
+//parse date/time
+var parseDate = d3.time.format("%d-%b-%y").parse;
 
-var x = d3.scale.ordinal().rangeRoundBands([0, width], .05);
+//set ranges with scale
+var x = d3.time.scale().range([0, width]);
+var y = d3.scale.linear().range([height, 0])
 
-var y = d3.scale.linear().range([height, 0]);
+//define axis
+var xAxis = d3.svg.axis().scale(x)
+  .orient("bottom").ticks(12);
 
-var xAxis = d3.svg.axis()
-    .scale(x)
-    .orient("bottom")
-    .tickFormat(d3.time.format("%Y-%m"));
+var yAxis =d3.svg.axis().scale(y)
+  .orient("left").ticks(10);
 
-var yAxis = d3.svg.axis()
-    .scale(y)
-    .orient("left")
-    .ticks(10);
-
+//append svg object to Container 2 of page
+//append group element to 'svg'
+//moves 'group' element to top left margin
+//New SVG in second container of
 var svg = d3.select("#container2").append("svg")
     .attr("width", width + margin.left + margin.right)
     .attr("height", height + margin.top + margin.bottom)
   .append("g")
-    .attr("transform", 
+    .attr("transform",
           "translate(" + margin.left + "," + margin.top + ")");
 
-d3.csv("bar-data.csv", function(error, data) {
 
-    data.forEach(function(d) {
-        d.date = parseDate(d.date);
-        d.value = +d.value;
-    });
-  
-  x.domain(data.map(function(d) { return d.date; }));
-  y.domain([0, d3.max(data, function(d) { return d.value; })]);
+// //+++Read POPULATION csv data
+// d3.csv("http://www.sfu.ca/~sytsui/USA_Populations-by-Race2015.csv")
+//    .row(processPopulationData)
+//    .get(function(err, d, i){
+// //     console.log(d)
+//    });
+//
+// //Process Population by Race Data
+// function processPopulationData(d, i) {
+//   d["Pop White"] = +d["Pop White"];
+//   d["Pop White Killed"]  = +d["Pop White Killed"];
+//   d["Pop Black"] = +d["Pop Black"];
+//   d["Pop Black Killed"] = +d["Pop Black Killed"];
+//   d["Pop Hispanic"] = +d["Pop Hispanic"];
+//   d["Pop Hispanic Killed"] = +d["Pop Hispanic Killed"]
+//   d["Pop Asian-Poly"] = +d["Pop Asian-Poly"];
+//   d["Pop Asian-Poly Killed"] = +d["Pop Asian-Poly Killed"];
+//   d["Pop Other"] = +d["Pop Other"];
+//   d["Pop Other Killed"] = +d["Pop Other Killed"];
+//   d["Total Killed"] = +d["Total Killed"]
+//
+//   //put that arrayed shit in another array called x
+//   var x = [ d["State "], d["Pop White"], d["Pop White Killed"],
+//     d["Pop Black"], d["Pop Black Killed"],
+//     d["Pop Hispanic"], d["Pop Hispanic Killed"] ,
+//     d["Pop Asian-Poly"], d["Pop Asian-Poly Killed"] ,
+//     d["Pop Other"], d["Pop Other Killed"]
+//   ]
+//
+//   //calculate deaths per pop of 5mil
+//   var white = (d["Pop White Killed"] / (d["Pop White"]/5000000))
+//   var black = (d["Pop Black Killed"] / (d["Pop Black"]/5000000))
+//   var hispanic = (d["Pop Hispanic Killed"] / (d["Pop Hispanic"]/5000000))
+//   var asian = (d["Pop Asian-Poly Killed"] / (d["Pop Asian-Poly"]/5000000))
+//   var other = (d["Pop Other Killed"] / (d["Pop Other"]/5000000))
+//
+//   var x = [d["Total Killed"], white, black, hispanic, asian, other]
+//   return x;
+// }
 
+
+d3.csv("http://www.sfu.ca/~sytsui/2015USA_PoliceKillings.csv", function(error, data) {
+  //format Date data
+  data.forEach(function(d) {
+    d.date = parseDate(d.date);
+    d.age = +d.age;
+  }) ;
+
+  //Scale the range of data
+  x.domain(d3.extent(data, function(d) {return d.date}));
+  y.domain([0, d3.max(data, function(d) {return d.age; })]);
+
+  //Add x Axis
   svg.append("g")
-      .attr("class", "x axis")
-      .attr("transform", "translate(0," + height + ")")
-      .call(xAxis)
-    .selectAll("text")
-      .style("text-anchor", "end")
-      .attr("dx", "-.8em")
-      .attr("dy", "-.55em")
-      .attr("transform", "rotate(-90)" );
+    .attr("class", "x axis")
+    .attr("transform", "translate(0," + height + ")")
+    .call(xAxis);
 
+  //Add Y axis
   svg.append("g")
-      .attr("class", "y axis")
-      .call(yAxis)
+    .attr("class", "y axis")
+    .call(yAxis);
 
-  svg.selectAll("bar")
+  //attach colour to race with category function
+  var colour = d3.scale.category10();
+  //attach data to circles (class dot)
+  svg.selectAll(".dot")
       .data(data)
-    .enter().append("rect")
-      .style("fill", "steelblue")
-      .attr("x", function(d) { return x(d.date); })
-      .attr("width", x.rangeBand())
-      .attr("y", function(d) { return y(d.value); })
-      .attr("height", function(d) { return height - y(d.value); });
-
+    .enter().append("circle") //draw the circle
+        .attr("class", "dot")
+        .attr("r", 4)
+        .attr("cx", function(d) {return x(d.date); })
+        .attr("cy", function(d) {return y(d.age); })
+        .style("fill", function(d) {return colour(d.race); })
+        .style("opacity", 0.35);
 });
